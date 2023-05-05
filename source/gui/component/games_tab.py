@@ -2,8 +2,6 @@ import PyQt6.QtWidgets as qt
 
 class GamesTab:
     def __init__(self, games):
-        self.widget = qt.QWidget()
-        self.layout = qt.QVBoxLayout()
         self.games = games
         table = qt.QTableWidget(0, 3)
         table.setHorizontalHeaderLabels(['Name', 'Archive', 'Local'])
@@ -15,5 +13,4 @@ class GamesTab:
             table.setItem(ii, 0, qt.QTableWidgetItem(game.name))
             table.setItem(ii, 1, qt.QTableWidgetItem(game.archive_path))
             table.setItem(ii, 2, qt.QTableWidgetItem(game.local_path))
-        self.layout.addWidget(table)
         self.widget = table

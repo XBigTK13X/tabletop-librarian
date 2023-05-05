@@ -5,10 +5,10 @@
 	"version": "0.2.0",
 	"configurations": [
 		{
-			"name": "Python: Current File",
+			"name": "Python: Desktop GUI",
 			"type": "python",
 			"request": "launch",
-			"program": "./gui/desktop.py",
+			"program": "./source/desktop-gui.py",
 			"console": "integratedTerminal",
 			"justMyCode": true,
 		}
