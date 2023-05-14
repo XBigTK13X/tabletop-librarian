@@ -5,10 +5,18 @@
 	"version": "0.2.0",
 	"configurations": [
 		{
-			"name": "Python: Desktop GUI",
+			"name": "Run GUI",
 			"type": "python",
 			"request": "launch",
 			"program": "./source/desktop-gui.py",
+			"console": "integratedTerminal",
+			"justMyCode": true,
+		},
+		{
+			"name": "Run CLI",
+			"type": "python",
+			"request": "launch",
+			"program": "./source/desktop-cli.py",
 			"console": "integratedTerminal",
 			"justMyCode": true,
 		}
