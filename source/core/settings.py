@@ -18,14 +18,12 @@ class Config:
             return
         with open(self.get_path(),'r') as config_data:
             settings = json.load(config_data)
-            self.Version = settings['Version']
             self.ArchivePaths = settings['ArchivePaths']
             self.TTSModsPath = settings['TTSModsPath']
             self.TTSBinaryPath = settings['TTSBinaryPath']
 
     def save(self):
         settings = {
-            'Version': self.Version,
             'ArchivePaths': self.ArchivePaths,
             'TTSModsPath': self.TTSModsPath,
             'TTSBinaryPath': self.TTSBinaryPath
