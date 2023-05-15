@@ -6,6 +6,7 @@ from gui.component.about_dialog import AboutDialog
 class MainWindow(qt.QMainWindow):
     def __init__(self, games, parent=None):
         super(MainWindow, self).__init__()
+        self.setWindowTitle("Tabletop Librarian")
         menu_bar = self.menuBar()
         help_menu = menu_bar.addMenu("&Help")
         about_action = help_menu.addAction("&About")
