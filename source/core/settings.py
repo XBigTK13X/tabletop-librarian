@@ -24,6 +24,7 @@ class Config:
 
     def save(self):
         settings = {
+            'Version': self.Version,
             'ArchivePaths': self.ArchivePaths,
             'TTSModsPath': self.TTSModsPath,
             'TTSBinaryPath': self.TTSBinaryPath
