@@ -13,7 +13,24 @@ jobs:
       - name: Check-out repository
         uses: actions/checkout@v3
 
-      - name: Setup Python
+      - name: Token swap app version (Linux)
+        if: runner.os == 'Linux'
+        run: |
+          TL_VERSION="${{github.ref_name}} - ${{ github.sha }}"
+          sed -i 's/TabletopLibrarianVersion/$TL_VERSION/g' ./source/core/settings.py
+
+      - name: Token swap app version (Mac)
+        if: runner.os == 'macOS'
+        run: |
+          TL_VERSION="${{github.ref_name}} - ${{ github.sha }}"
+          sed -i '' 's/TabletopLibrarianVersion/$TL_VERSION/g' ./source/core/settings.py
+
+      - name: Token swap app version (Windows)
+        if: runner.os == 'Windows'
+        run: |
+          (Get-Content ./source/core/settings.py).replace('TabletopLibrarianVersion', '${{github.ref_name}} - ${{ github.sha }}') | Set-Content ./source/core/settings.py
+
+      - name: Configure python
         uses: actions/setup-python@v4
         with:
           python-version: '3.11' # Version range or exact version of a Python version to use, using SemVer's version range syntax
@@ -22,11 +39,11 @@ jobs:
           cache-dependency-path: |
             **/requirements*.txt
 
-      - name: Install Dependencies
+      - name: Install dependencies
         run: |
           pip install -r source/requirements.txt
 
-      - name: Build GUI Executable
+      - name: Build GUI binary
         uses: ./.github/actions/nuitka
         with:
           nuitka-version: main
@@ -34,7 +51,7 @@ jobs:
           onefile: true
           enable-plugins: 'pyqt6'
 
-      - name: Build CLI Executable
+      - name: Build CLI binary
         uses: ./.github/actions/nuitka
         with:
           nuitka-version: main
@@ -42,7 +59,7 @@ jobs:
           onefile: true
           enable-plugins: 'pyqt6'
 
-      - name: Upload Artifacts
+      - name: Upload artifacts
         uses: actions/upload-artifact@v3
         with:
           name: ${{ runner.os }} Build
