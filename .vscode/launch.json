@@ -8,7 +8,7 @@
 			"name": "Run GUI",
 			"type": "python",
 			"request": "launch",
-			"program": "./source/desktop-gui.py",
+			"program": "./source/tl-gui.py",
 			"console": "integratedTerminal",
 			"justMyCode": true,
 		},
@@ -16,7 +16,7 @@
 			"name": "Run CLI",
 			"type": "python",
 			"request": "launch",
-			"program": "./source/desktop-cli.py",
+			"program": "./source/tl-cli.py",
 			"console": "integratedTerminal",
 			"justMyCode": true,
 		}
