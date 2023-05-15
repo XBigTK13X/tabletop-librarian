@@ -1,12 +1,15 @@
-import click
-
 from cli import main_app
 
-@click.command()
+import argparse
 
-@click.option("--show", help="Display high level details of mods")
-def show(show):
-    main_app.execute(show)
+parser = argparse.ArgumentParser(
+    prog="Tabletop Librarian",
+    description="Manage digital board game mods"
+)
+parser.add_argument(
+    '--show',
+    help="'all' to see every known mod, otherwise specify subset id"
+)
 
 if __name__ == '__main__':
-    show()
+    main_app.execute(parser.parse_args())
