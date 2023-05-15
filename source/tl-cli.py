@@ -15,10 +15,5 @@ parser.add_argument(
     action='version',
     version='%(prog)s {version}'.format(version=__version__))
 
-parser.add_argument(
-    '--show',
-    help="'all' to see every known mod, otherwise specify subset id"
-)
-
 if __name__ == '__main__':
-    main_app.execute(parser, parser.parse_args())
+    main_app.execute(parser)
