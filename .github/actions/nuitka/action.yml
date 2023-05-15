@@ -1,0 +1,300 @@
+# https://raw.githubusercontent.com/Nuitka/Nuitka-Action/7d9a61da768c9771e65950a4ed079ce6e40ec137/action.yml
+name: Build EXE from Python Script
+
+branding:
+  icon: "package"
+  color: "blue"
+
+description: "Build a stand-alone exe from python scripts using nuitka on Mac/Linux/Windows. Even supports GUIs with Qt/Pyside6 and Tkinter"
+
+inputs:
+  nuitka-version:
+    default: "main"
+    description: "Version of nuitka to use"
+
+  ### Only Required Input ###
+  script-name:
+    required: true
+    description: "Name or path to python script that is to be built"
+
+  ### Nuitka Options ###
+  module:
+    type: boolean
+    default: false
+    description: "Create an extension module executable instead of a program. Defaults to off."
+  standalone:
+    type: boolean
+    default: true
+    description: 'Enable standalone mode for output. This allows you to transfer the created binary to other machines without it using an existing Python installation. This also means it will become big. It implies these option: "-- follow-imports" and "--python-flag=no_site". Defaults to true.'
+  onefile:
+    type: boolean
+    default: true
+    description: "On top of standalone mode, enable onefile mode. This means not a folder, but a compressed executable is created and used. Defaults to true."
+  assume-yes-for-downloads:
+    type: boolean
+    default: true
+    description: 'Allow Nuitka to download external code if necessary, e.g. dependency walker, ccache, and even gcc on Windows. To disable, redirect input from nul device, e.g. "</dev/null" or "<NUL:". Default is to prompt.'
+  show-scons:
+    description: "Displays the detailed C compilation info from Scons during build process (useful for debugging purposes)"
+    type: boolean
+    default: true
+
+  ### Nuitka Plugins to enable. ###
+  enable-plugins:
+    description: "A comma separated list of plugins, such as pyside2, pyside6, tk-inter, etc."
+
+  ### Control the inclusion of modules and packages in result. ###
+  include-data-dir:
+    description: 'Include data files from complete directory in the distribution. This is recursive. Check "--include-data-files" with patterns if you want non-recursive inclusion. An example would be "--include-data-dir=/path/some_dir=data/some_dir" for plain copy, of the whole directory. All files are copied, if you want to exclude files you need to remove them beforehand, or use "--noinclude-data-files" option to remove them. Default empty.'
+  include-package:
+    description: 'Include a whole package. Give as a Python namespace, e.g. "some_package.sub_package" and Nuitka will then find it and include it and all the modules found below that disk location in the binary or extension module it creates, and make it available for import by the code. To avoid unwanted sub packages, e.g. tests you can e.g. do this "--nofollow-import-to=*.tests". Default empty.'
+  include-package-data:
+    description: "Include package data. Detects data files of packages automatically and copies them over. Can be a list. Default empty."
+  include-module:
+    description: 'Include a single module. Give as a Python namespace, e.g. "some_package.some_module" and Nuitka will then find it and include it in the binary or extension module it creates, and make it available for import by the code. Default empty.'
+  include-plugin-directory:
+    description: "Include the content of that directory, no matter if it is used by the given main program in a visible form. Overrides all other inclusion options. Can be given multiple times. Default empty."
+  include-plugin-files:
+    description: "Include into files matching the PATTERN. Overrides all other follow options. Can be given multiple times. Default empty."
+  prefer-source-code:
+    description: "For already compiled extension modules, where there is both a source file and an extension module, normally the extension module is used, but it should be better to compile the module from available source code for best performance. If not desired, there is --no- prefer-source-code to disable warnings about it. Default off."
+  user-package-configuration-file:
+    description: "User provided YAML file with package configuration. You can include DLLs, remove bloat, add hidden dependencies. Check User Manual for a complete description of the format to use. Can be given multiple times. Defaults to empty."
+
+  ### Output choices ##
+  output-dir:
+    description: "Directory for output builds"
+    default: build
+  output-file:
+    description: "Specify how the executable should be named. For extension modules there is no choice, also not for standalone mode and using it will be an error. This may include path information that needs to exist though. Defaults to '<program_name>' on this platform. .exe)"
+    required: false
+
+  # Enable Commercial features of Nuitka using a PAT (access token)
+  access-token:
+    description: "Github personal access token of an account authorized to access the Nuitka/Nuitka-commercial repo"
+
+  enable-console:
+    type: boolean
+    description: 'When compiling for Windows or macOS, enable the console window and create a console application. This disables hints from certain modules, e.g. "PySide" that suggest to disable it. Defaults to true.'
+    default: true
+  disable-console:
+    type: boolean
+    default: false
+    description: "When compiling for Windows or macOS, disable the console window and create a GUI application. Defaults to false."
+
+  # Windows specific controls
+  windows-icon-from-ico:
+    description: Add executable icon. Can be given multiple times for different resolutions or files with multiple icons inside. In the later case, you may also suffix with \#<n> where n is an integer index starting from 1, specifying a specific icon to be included, and all others to be ignored.
+  windows-uac-admin:
+    description: Request Windows User Control, to grant admin rights on execution. (Windows only). Defaults to off.
+    type: boolean
+    default: false
+  windows-uac-uiaccess:
+    description: "Request Windows User Control, to enforce running from a few folders only, remote desktop access. (Windows only). Defaults to off."
+    type: boolean
+    default: false
+  windows-company-name:
+    description: Name of the company to use in Windows Version information.  One of file or product version is required, when a version resource needs to be added, e.g. to specify product name, or company name. Defaults to GITHUB_REPOSITORY_OWNER.
+    default: "${{ github.repository_owner }}"
+  windows-product-name:
+    description: Name of the product to use in Windows Version information. Defaults to base filename of the binary.
+  windows-file-version:
+    description: File version to use in Windows Version information. Must be a sequence of up to 4 numbers, e.g. 1.0.0.0, only this format is allowed. One of file or product version is required, when a version resource needs to be added, e.g. to specify product name, or company name. Defaults to unused.
+  windows-product-version:
+    description: Product version to use in Windows Version information. Must be a sequence of up to 4 numbers, e.g. 1.0.0.0, only this format is allowed. One of file or product version is required, when a version resource needs to be added, e.g. to specify product name, or company name. Defaults to unused.
+  windows-file-description:
+    description: Description of the file use in Windows Version information.  One of file or product version is required, when a version resource needs to be added, e.g. to specify product name, or company name. Defaults to nonsense.
+  windows-onefile-tempdir-spec:
+    description: "Use this as a temporary folder. Defaults to '%TEMP%\\onefile_%PID%_%TIME%', i.e. system temporary directory."
+  mingw64:
+    description: "Allows/enforces building with MinGW64"
+    type: boolean
+    default: false
+    required: false
+
+  # macOS specific controls:
+  macos-create-app-bundle:
+    description: "When compiling for macOS, create a bundle rather than a plain binary application. Currently experimental and incomplete. Currently this is the only way to unlock disabling of console. Defaults to false."
+    type: boolean
+    default: false
+  macos-app-icon:
+    description: "Add icon for the application bundle to use. Can be given only one time. Defaults to Python icon if available."
+  macos-target-arch:
+    description: "options ('universal, 'arm64', 'x86_64') Default and limit is what the running Python allows for. Default is 'native' which is the architecture the Python is run with."
+  macos-signed-app-name:
+    description: "Name of the application to use for macOS signing. Follow 'com.YourCompany.AppName' naming results for best results, as these have to be globally unique, and will potentially grant protected API accesses."
+  macos-app-mode:
+    description: "options ('gui', 'background', 'ui-element') Mode of application for the application bundle. When launching a Window, and appearing in Docker is desired, default value 'gui' is a good fit. Without a Window ever, the application is a 'background' application. For UI elements that get to display later, 'ui-element' is in-between. The application will not appear in dock, but get full access to desktop when it does open a Window later"
+  macos-sign-identity:
+    description: "When signing on macOS, by default an ad-hoc identify will be used, but with this option your get to specify another identity to use. The signing of code is now mandatory on macOS and cannot be disabled. Default 'ad-hoc' if not given."
+  macos-sign-notarization:
+    description: "When signing for notarization, using a proper TeamID identity from Apple, use the required runtime signing option, such that it can be accepted."
+  macos-app-version:
+    description: "Product version to use in macOS bundle information. Defaults to '1.0' if not given."
+  macos-app-protected-resource:
+    description: "Request an entitlement for access to a macOS protected resources, e.g. 'NSMicrophoneUsageDescription:Microphone access for recording audio.' requests access to the microphone and provides an informative text for the user, why that is needed. Before the colon, is an OS identifier for an access right, then the informative text. Legal values can be found on https://developer.apple.com/documentation/bundleresources/information_property_list/protected_resources and the option can be specified multiple times. Default empty."
+
+runs:
+  using: "composite"
+  steps:
+    - name: Install Dependencies
+      shell: bash
+      run: |
+        pip install -r "${{ github.action_path }}/requirements.txt"
+
+        # With commercial access token, use that repository.
+        if [ "${{ inputs.access-token }}" != "" ]; then
+          repo_url="git+https://${{ inputs.access-token }}@github.com/Nuitka/Nuitka-commercial.git"
+        else
+          repo_url="git+https://$@github.com/Nuitka/Nuitka.git"
+        fi
+
+        pip install "${repo_url}/@${{inputs.nuitka-version }}#egg=nuitka"
+
+    - name: Build Executable (Windows)
+      if: runner.os == 'Windows'
+      shell: powershell
+      run: |
+        $ErrorActionPreference = 'Stop'
+        $args = @()
+        if (("${{ inputs.standalone }}" -eq '${{ true }}') -and ("${{ inputs.module }}" -ne '${{ true }}')){
+          $args += @('--standalone')
+        }
+        if (("${{ inputs.onefile }}" -eq '${{ true }}') -and ("${{ inputs.module }}" -ne '${{ true }}')){
+          $args += @('--onefile')
+        }
+        if ("${{ inputs.assume-yes-for-downloads }}" -eq '${{ true }}'){
+          $args += @('--assume-yes-for-downloads')
+        }
+        if ("${{ inputs.output-dir }}" -ne ''){
+          $args += @('--output-dir="${{ inputs.output-dir }}"')
+        }
+        if ("${{ inputs.enable-plugins }}" -ne ''){
+          $plugins = ("${{ inputs.enable-plugins }}" -split '\s*,\s*')
+          foreach ($plugin in $plugins) {
+            $args += @("--enable-plugin=$plugin");
+          }
+        }
+        if ("${{ inputs.include-data-dir }}" -ne ''){
+          $data = ("${{ inputs.include-data-dir }}" -split '\s*,\s*')
+          foreach ($datum in $data) {
+            $args += @("--include-data-dir=$datum");
+          }
+        }
+        if ("${{ inputs.include-package-data }}" -ne ''){
+          $data = ("${{ inputs.include-package-data }}" -split '\s*,\s*')
+          foreach ($datum in $data) {
+            $args += @("--include-package-data=$datum");
+          }
+        }
+        if ("${{ inputs.user-package-configuration-file }}" -ne ''){
+          $user_yaml_files = ("${{ inputs.user-package-configuration-file }}" -split '\s*,\s*')
+          foreach ($user_yaml_file in $user_yaml_files) {
+            $args += @("--user-package-configuration-file=$user_yaml_file");
+          }
+        }
+        if ("${{ inputs.output-file }}" -ne ''){
+          $args += @('-o', '${{ inputs.output-file }}')
+        }
+        if ("${{ inputs.disable-console }}" -eq '${{ true }}'){
+          $args += @('--disable-console')
+        }
+        if ("${{ inputs.windows-icon-from-ico }}" -ne ''){
+          $args += @('--windows-icon-from-ico="${{ inputs.windows-icon-from-ico }}"')
+        }
+        if ("${{ inputs.mingw64 }}" -eq '${{ true }}'){
+          $args += @('--mingw64')
+        }
+        if ("${{ inputs.show-scons }}" -eq '${{ true }}'){
+          $args += @('--show-scons')
+        }
+        if ("${{ inputs.module }}" -ne '${{ false }}'){
+          python -m nuitka $args --module "${{ inputs.script-name }}"
+        } else {
+          python -m nuitka $args "${{ inputs.script-name }}"
+        }
+
+    - name: Build Executable (macOS and Linux)
+      if: ${{ runner.os == 'macOS' || runner.os == 'Linux' }}
+      shell: bash
+      run: |
+        ARGS=""
+        SPACE=" "
+        if [ "${{ inputs.module }}" != "${{ false }}" ]; then
+          ARGS+=" --module"
+        fi
+        if [ "${{ inputs.standalone }}" == "${{ true }}" ] && [ "${{ inputs.module }}" != "${{ true }}" ]; then
+          ARGS+=" --standalone"
+        fi
+        if [ "${{ inputs.onefile }}" == "${{ true }}" ] && [ "${{ inputs.standalone }}" == "${{ true }}" ] && [ "${{ inputs.module }}" != "${{ true }}" ]; then
+          ARGS+=" --onefile"
+        fi
+        if [ "${{ inputs.show-scons }}" == "${{ true }}" ]; then
+          ARGS+=" --show-scons"
+        fi
+        if [ "${{ inputs.assume-yes-for-downloads }}" == "${{ true }}" ]; then
+          ARGS+=" --assume-yes-for-downloads"
+        fi
+        if [ "${{ inputs.output-dir }}" != "" ]; then
+          ARGS+=" --output-dir=${{ inputs.output-dir }}"
+        fi
+        if [ "${{ inputs.output-file }}" != "" ]; then
+          ARGS+=" -o ${{ inputs.output-file }}"
+        fi
+        if [ "${{ inputs.disable-console }}" == "${{ true }}" ]; then
+          ARGS+=" --disable-console"
+        fi
+        if [ "${{ inputs.enable-plugins }}" != "" ]; then
+          for plugin in $(echo ${{ inputs.enable-plugins }} | sed "s/,/ /g")
+          do
+            ARGS+=" --enable-plugin=$plugin"
+          done
+        fi
+        if [ "${{ inputs.include-data-dir }}" != "" ]; then
+          for datum in $(echo ${{ inputs.include-data-dir }} | sed "s/,/ /g")
+          do
+            ARGS+=" --include-data-dir=$datum"
+          done
+        fi
+        if [ "${{ inputs.include-package-data }}" != "" ]; then
+          for datum in $(echo ${{ inputs.include-package-data }} | sed "s/,/ /g")
+          do
+            ARGS+=" --include-package-data=$datum"
+          done
+        fi
+        if [ "${{ inputs.user-package-configuration-file }}" != "" ]; then
+          for user_yaml_file in $(echo ${{ inputs.user-package-configuration-file }} | sed "s/,/ /g")
+          do
+            ARGS+=" --user-package-configuration-file=$user_yaml_file"
+          done
+        fi
+        if [ ${{ runner.os }} == 'macOS' ]; then
+          if [ "${{ inputs.macos-create-app-bundle }}" == "true" || "${{ inputs.disable-console }}" == "${{ true }}" ]; then
+            ARGS+=" --macos-create-app-bundle"
+          fi
+          if [ "${{ inputs.macos-app-icon }}" != "" ]; then
+            ARGS+=" --macos-app-icon=${{ inputs.macos-app-icon }}"
+          fi
+          if [ "${{ inputs.macos-target-arch }}" != "" ]; then
+            ARGS+=" --macos-target-arch=${{ inputs.macos-target-arch }}"
+          fi
+          if [ "${{ inputs.macos-signed-app-name }}" != "" ]; then
+            ARGS+=" --macos-signed-app-name=${{ inputs.macos-signed-app-name }}"
+          fi
+          if [ "${{ inputs.macos-app-mode }}" != "" ]; then
+            ARGS+=" --macos-app-mode=${{ inputs.macos-app-mode }}"
+          fi
+          if [ "${{ inputs.macos-sign-identity }}" != "" ]; then
+            ARGS+=" --macos-sign-identity=${{ inputs.macos-sign-identity }}"
+          fi
+          if [ "${{ inputs.macos-sign-notarization }}" != "" ]; then
+            ARGS+=" --macos-sign-notarization=${{ inputs.macos-sign-notarization }}"
+          fi
+          if [ "${{ inputs.macos-app-version }}" != "" ]; then
+            ARGS+=" --macos-app-version=${{ inputs.macos-app-version }}"
+          fi
+          if [ "${{ inputs.macos-app-protected-resource }}" != "" ]; then
+            ARGS+=" --macos-app-protected-resource=${{ inputs.macos-app-protected-resource }}"
+          fi
+        fi
+        python -m nuitka $ARGS "${{ inputs.script-name }}"

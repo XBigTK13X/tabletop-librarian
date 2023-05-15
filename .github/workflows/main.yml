@@ -26,20 +26,21 @@ jobs:
         run: |
           pip install -r source/requirements.txt
 
-      - name: Build Executable
-        uses: Nuitka/Nuitka-Action@main
+      - name: Build GUI Executable
+        uses: ./.github/actions/nuitka
         with:
           nuitka-version: main
-          script-name: source/desktop-gui.py
+          script-name: source/tl-gui.py
           onefile: true
+          enable-plugins: 'pyqt6'
 
-
-      - name: Build Executable
-        uses: Nuitka/Nuitka-Action@main
+      - name: Build CLI Executable
+        uses: ./.github/actions/nuitka
         with:
           nuitka-version: main
-          script-name: source/desktop-cli.py
+          script-name: source/tl-cli.py
           onefile: true
+          enable-plugins: 'pyqt6'
 
       - name: Upload Artifacts
         uses: actions/upload-artifact@v3
