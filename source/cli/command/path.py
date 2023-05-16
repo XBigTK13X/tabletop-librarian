@@ -28,7 +28,7 @@ class PathCommand:
         parser.add_argument(
             '--content',
             help="How the path should be treated",
-            choices=['executable', 'archive']
+            choices=['executable', 'archive', 'mod', 'save']
         )
 
     def handle(self, cli_args):
@@ -39,12 +39,12 @@ class PathCommand:
                     config.save()
                     return
                 if cli_args.content == "mod":
-                    config.set_tts_mods_dir(cli_args.add)
+                    config.add_directory(cli_args.name, cli_args.source, cli_args.content, cli_args.add)
                     config.save()
                     return
             if cli_args.source == 'tmm':
                 if cli_args.content == "archive":
-                    if config.add_archive(cli_args.name, cli_args.source, cli_args.content, cli_args.add):
+                    if config.add_directory(cli_args.name, cli_args.source, cli_args.content, cli_args.add):
                         config.save()
                     return
 

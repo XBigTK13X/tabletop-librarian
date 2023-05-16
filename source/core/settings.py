@@ -7,8 +7,7 @@ class Config:
     def __init__(self):
         # Version value is token swapped by the build server
         self.Version = "TabletopLibrarianVersion"
-        self.ArchivePaths = []
-        self.TTSModsPath = ""
+        self.Directories = []
         self.TTSBinaryPath = ""
 
     def get_path(self):
@@ -19,15 +18,13 @@ class Config:
             return
         with open(self.get_path(),'r') as config_data:
             settings = json.load(config_data)
-            self.ArchivePaths = settings['ArchivePaths']
-            self.TTSModsPath = settings['TTSModsPath']
+            self.Directories = settings['Directories']
             self.TTSBinaryPath = settings['TTSBinaryPath']
 
     def save(self):
         settings = {
             'Version': self.Version,
-            'ArchivePaths': self.ArchivePaths,
-            'TTSModsPath': self.TTSModsPath,
+            'Directories': self.Directories,
             'TTSBinaryPath': self.TTSBinaryPath
         }
         with open(self.get_path(), 'w') as config_data:
@@ -36,27 +33,25 @@ class Config:
     def set_tts_binary(self, tts_path):
         self.TTSBinaryPath = tts_path
 
-    def set_tts_mods_dir(self, dir_path):
-        self.TTSModsPath = dir_path
-
-    def add_archive(self, name, source, content, location):
+    def add_directory(self, name, source, content, location):
         found = False
-        for archive_path in self.ArchivePaths:
-            if archive_path['Name'] == name:
-                print("Name [{name}] already found in archive_path")
-                pprint.pprint(archive_path)
+        for pp in self.Directories:
+            if pp['Name'] == name:
+                print("Name [{name}] already found")
+                pprint.pprint(pp)
                 return False
-            if archive_path['Location'] == location:
-                print("Location [{location}] already found in archive_path")
-                pprint.pprint(archive_path)
+            if pp['Location'] == location:
+                print("Location [{location}] already found")
+                pprint.pprint(pp)
                 return False
-        self.ArchivePaths.append({
+        self.Directories.append({
             'Name': name,
             'Location': location,
             'Source': source,
             'Content': content
         })
         return True
+
 
 config = Config()
 config.load()

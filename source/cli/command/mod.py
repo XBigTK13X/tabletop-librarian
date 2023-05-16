@@ -19,8 +19,8 @@ class ModCommand:
             action="store_true"
         )
         self.parser.add_argument(
-            '--search_archives',
-            help="Find an archive matching the needle"
+            '--search',
+            help="Find a mod or archive matching the needle"
         )
 
     def handle(self, cli_args):
@@ -35,12 +35,12 @@ class ModCommand:
                     print(f"  - Name: {archive_path['Name']}\n    Location: {archive_path['Location']}\n    Source: {archive_path['Source']}\n    Content: {archive_path['Content']}")
         else:
             mod_cache.refresh()
-            if cli_args.search_archives:
-                archives = mod_cache.search_archives(cli_args.search_archives)
-                if len(archives) == 0:
-                    print(f"No archives found matching [{cli_args.search_archives}]")
+            if cli_args.search:
+                results = mod_cache.search(cli_args.search)
+                if len(results) == 0:
+                    print(f"No results found matching [{cli_args.search}]")
                 else:
-                    for archive in archives:
+                    for archive in results:
                         print(archive)
             else:
                 if not cli_args.id or cli_args.id == 'all':
