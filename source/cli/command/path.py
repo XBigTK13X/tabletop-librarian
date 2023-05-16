@@ -18,12 +18,12 @@ class PathCommand:
             required=False
         )
         # tts -> Tabletop Simulator
-        # tmm -> Tabletop Simulator Mod Manager
+        # tmb -> Tabletop Simulator Mod Backup
         # tc -> Tabletop Club
         parser.add_argument(
             '--source',
             help="The type of path being added",
-            choices=['tts', 'tmm', 'tc']
+            choices=['tts', 'tmb', 'tc']
         )
         parser.add_argument(
             '--content',
@@ -42,7 +42,7 @@ class PathCommand:
                     config.add_directory(cli_args.name, cli_args.source, cli_args.content, cli_args.add)
                     config.save()
                     return
-            if cli_args.source == 'tmm':
+            if cli_args.source == 'tmb':
                 if cli_args.content == "archive":
                     if config.add_directory(cli_args.name, cli_args.source, cli_args.content, cli_args.add):
                         config.save()
