@@ -6,7 +6,7 @@ An unofficial open source mod manager for Tabletop Simulator (TTS)
 
 TTS provides mods as a list of assets. If any of those links are deleted, then the entire mod is effectively destroyed. When copyrights are being protected for actively available games, that isn't a problem. When an abandoned title that is loved is lost to bit rot, then the community is worse off than had it been before.
 
-The third party software TTS Mod Manager is almost perfect, but it is closed source and hasn't been updated in a while. There are dozens of other projects with similar goals, but TTS Mod Manager is the only widely used competitor.
+The third party software TTS Mod Backup is almost perfect, but it is closed source and hasn't been updated in a while. There are dozens of other projects with similar goals, but TTS Mod Manager is the only widely used competitor.
 
 ## Goals
 
