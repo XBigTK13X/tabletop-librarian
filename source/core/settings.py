@@ -1,6 +1,7 @@
 from pathlib import Path
 import os
 import json
+import pprint
 
 class Config:
     def __init__(self):
@@ -34,6 +35,28 @@ class Config:
 
     def set_tts_binary(self, tts_path):
         self.TTSBinaryPath = tts_path
+
+    def set_tts_mods_dir(self, dir_path):
+        self.TTSModsPath = dir_path
+
+    def add_archive(self, name, source, content, location):
+        found = False
+        for archive_path in self.ArchivePaths:
+            if archive_path['Name'] == name:
+                print("Name [{name}] already found in archive_path")
+                pprint.pprint(archive_path)
+                return False
+            if archive_path['Location'] == location:
+                print("Location [{location}] already found in archive_path")
+                pprint.pprint(archive_path)
+                return False
+        self.ArchivePaths.append({
+            'Name': name,
+            'Location': location,
+            'Source': source,
+            'Content': content
+        })
+        return True
 
 config = Config()
 config.load()

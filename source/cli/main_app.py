@@ -1,9 +1,9 @@
 from core.settings import config
 
-from cli.command import show,path
+from cli.command import mod,path
 
 sub_commands = [
-    show.ShowCommand,
+    mod.ModCommand,
     path.PathCommand
 ]
 

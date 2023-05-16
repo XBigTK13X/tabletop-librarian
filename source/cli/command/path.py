@@ -17,23 +17,37 @@ class PathCommand:
             help="What to display when referencing this path",
             required=False
         )
+        # tts -> Tabletop Simulator
+        # tmm -> Tabletop Simulator Mod Manager
+        # tc -> Tabletop Club
         parser.add_argument(
-            '--kind',
-            help="The type of path being added"
+            '--source',
+            help="The type of path being added",
+            choices=['tts', 'tmm', 'tc']
         )
         parser.add_argument(
             '--content',
-            help="How the path should be treated"
+            help="How the path should be treated",
+            choices=['executable', 'archive']
         )
 
     def handle(self, cli_args):
-        # --add-path --kind archive --source tts --content full --path
         if cli_args.add:
-            if cli_args.kind == 'tts':
+            if cli_args.source == 'tts':
                 if cli_args.content == "executable":
                     config.set_tts_binary(cli_args.add)
                     config.save()
                     return
+                if cli_args.content == "mod":
+                    config.set_tts_mods_dir(cli_args.add)
+                    config.save()
+                    return
+            if cli_args.source == 'tmm':
+                if cli_args.content == "archive":
+                    if config.add_archive(cli_args.name, cli_args.source, cli_args.content, cli_args.add):
+                        config.save()
+                    return
+
         self.parser.print_help()
 
 
