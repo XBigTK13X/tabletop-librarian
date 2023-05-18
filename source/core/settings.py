@@ -2,12 +2,13 @@ from pathlib import Path
 import os
 import json
 import pprint
+import uuid
 
 class Config:
     def __init__(self):
         # Version value is token swapped by the build server
         self.Version = "TabletopLibrarianVersion"
-        self.Directories = []
+        self.Sources = []
         self.TTSBinaryPath = ""
 
     def get_path(self):
@@ -18,13 +19,13 @@ class Config:
             return
         with open(self.get_path(),'r') as config_data:
             settings = json.load(config_data)
-            self.Directories = settings['Directories']
+            self.Sources = settings['Sources']
             self.TTSBinaryPath = settings['TTSBinaryPath']
 
     def save(self):
         settings = {
             'Version': self.Version,
-            'Directories': self.Directories,
+            'Sources': self.Sources,
             'TTSBinaryPath': self.TTSBinaryPath
         }
         with open(self.get_path(), 'w') as config_data:
@@ -33,9 +34,9 @@ class Config:
     def set_tts_binary(self, tts_path):
         self.TTSBinaryPath = tts_path
 
-    def add_directory(self, name, source, content, location):
+    def add_directory(self, name, kind, content, location):
         found = False
-        for pp in self.Directories:
+        for pp in self.Sources:
             if pp['Name'] == name:
                 print("Name [{name}] already found")
                 pprint.pprint(pp)
@@ -44,10 +45,11 @@ class Config:
                 print("Location [{location}] already found")
                 pprint.pprint(pp)
                 return False
-        self.Directories.append({
+        self.Sources.append({
+            'Id': uuid.uuid4(),
             'Name': name,
             'Location': location,
-            'Source': source,
+            'Kind': kind,
             'Content': content
         })
         return True

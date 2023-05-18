@@ -1,10 +1,10 @@
 import PyQt6.QtWidgets as qt
-from gui.component.games_tab import GamesTab
+from gui.component.mods_tab import ModsTab
 from gui.component.paths_tab import PathsTab
 from gui.component.about_dialog import AboutDialog
 
 class MainWindow(qt.QMainWindow):
-    def __init__(self, games, parent=None):
+    def __init__(self, parent=None):
         super(MainWindow, self).__init__()
         self.setWindowTitle("Tabletop Librarian")
         menu_bar = self.menuBar()
@@ -15,7 +15,7 @@ class MainWindow(qt.QMainWindow):
         central_widget = qt.QWidget(self)
         root_layout = qt.QVBoxLayout(central_widget)
         tabs = qt.QTabWidget()
-        tabs.addTab(GamesTab(games).widget,"Games")
+        tabs.addTab(ModsTab().widget, "Mods")
         tabs.addTab(PathsTab().widget, "Paths")
         root_layout.addWidget(tabs)
         self.setCentralWidget(central_widget)

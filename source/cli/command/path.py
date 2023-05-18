@@ -21,7 +21,7 @@ class PathCommand:
         # tmb -> Tabletop Simulator Mod Backup
         # tc -> Tabletop Club
         parser.add_argument(
-            '--source',
+            '--kind',
             help="The type of path being added",
             choices=['tts', 'tmb', 'tc']
         )
@@ -33,18 +33,18 @@ class PathCommand:
 
     def handle(self, cli_args):
         if cli_args.add:
-            if cli_args.source == 'tts':
+            if cli_args.kind == 'tts':
                 if cli_args.content == "executable":
                     config.set_tts_binary(cli_args.add)
                     config.save()
                     return
                 if cli_args.content == "mod":
-                    config.add_directory(cli_args.name, cli_args.source, cli_args.content, cli_args.add)
+                    config.add_directory(cli_args.name, cli_args.kind, cli_args.content, cli_args.add)
                     config.save()
                     return
-            if cli_args.source == 'tmb':
+            if cli_args.kind == 'tmb':
                 if cli_args.content == "archive":
-                    if config.add_directory(cli_args.name, cli_args.source, cli_args.content, cli_args.add):
+                    if config.add_directory(cli_args.name, cli_args.kind, cli_args.content, cli_args.add):
                         config.save()
                     return
 

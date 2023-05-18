@@ -32,7 +32,7 @@ class ModCommand:
             if len(config.ArchivePaths) > 0:
                 print(f"Archive Paths")
                 for archive_path in config.ArchivePaths:
-                    print(f"  - Name: {archive_path['Name']}\n    Location: {archive_path['Location']}\n    Source: {archive_path['Source']}\n    Content: {archive_path['Content']}")
+                    print(f"  - Name: {archive_path['Name']}\n    Location: {archive_path['Location']}\n    Kind: {archive_path['Kind']}\n    Content: {archive_path['Content']}")
         else:
             mod_cache.refresh()
             if cli_args.search:
@@ -40,10 +40,15 @@ class ModCommand:
                 if len(results) == 0:
                     print(f"No results found matching [{cli_args.search}]")
                 else:
-                    for archive in results:
-                        print(archive)
+                    for entry in results:
+                        print(entry.path)
             else:
                 if not cli_args.id or cli_args.id == 'all':
-                    mod_cache.all_mods
+                    results = mod_cache.all()
+                    if len(results) == 0:
+                        print(f"No mods found. Set paths and rescan.")
+                    else:
+                        for entry in results:
+                            print(entry.path)
                 else:
                     print(f"TODO Only showing subset {cli_args.id}")
