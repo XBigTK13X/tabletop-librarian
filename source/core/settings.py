@@ -12,10 +12,13 @@ class Config:
         self.TTSBinaryPath = ""
         self.ConfigDir = os.path.join(Path.home(),'.tabletop-librarian')
         self.AssetCacheDir = os.path.join(self.ConfigDir,'asset-cache/')
+        self.ArchiveCreateDir = os.path.join(self.ConfigDir,'archive-create/')
         if not os.path.isdir(self.ConfigDir):
             os.mkdir(self.ConfigDir)
         if not os.path.isdir(self.AssetCacheDir):
             os.mkdir(self.AssetCacheDir)
+        if not os.path.isdir(self.ArchiveCreateDir):
+            os.mkdir(self.ArchiveCreateDir)
 
     def get_path(self):
         return os.path.join(self.ConfigDir, "tabletop-librarian.cfg")

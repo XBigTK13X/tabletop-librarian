@@ -19,7 +19,7 @@ class AssetCache:
     def download(self, mod):
         downloads = {}
         for location in mod.asset_locations:
-            if tts.local_file_exists(mod, location):
+            if tts.local_file_glob(mod, location):
                 continue
             self.hasher.update(location.encode())
             local_id = self.hasher.hexdigest()
