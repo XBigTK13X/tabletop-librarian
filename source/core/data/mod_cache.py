@@ -1,7 +1,10 @@
 from core.settings import config
-from core.model import mod, archive, source
+from core.model import mod
+from core.model import archive
+from core.model import source
 
-import os, json
+import os
+import json
 
 class ModCache:
     def __init__(self):
