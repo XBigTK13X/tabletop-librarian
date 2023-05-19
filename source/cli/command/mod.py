@@ -1,4 +1,5 @@
 from core.data.mod_cache import mod_cache
+from core.data.asset_cache import asset_cache
 from core.settings import config
 
 class ModCommand:
@@ -22,9 +23,13 @@ class ModCommand:
             '--search',
             help="Find a mod or archive matching the needle"
         )
+        self.parser.add_argument(
+            '--download',
+            help="Obtain remote resources for a mod and store them locally"
+        )
 
     def handle(self, cli_args):
-        # TODO Hoist out of this place to parent
+        # TODO Hoist config command out of this place to root command
         if cli_args.config:
             print("Active configuration")
             print(f"TTS Binary Path: {config.TTSBinaryPath}")
@@ -42,6 +47,17 @@ class ModCommand:
                 else:
                     for entry in results:
                         print(entry.path)
+            elif cli_args.download:
+                print(f"Searching for [{cli_args.download}]")
+                results = mod_cache.search(cli_args.download)
+                if len(results) == 0:
+                    print(f"TODO: Downloading all mods content")
+                else:
+                    for entry in results:
+                        if entry.data_kind == 'mod':
+                            entry.parse_manifest()
+                            cached_assets = asset_cache.download(entry)
+                            entry.persist_assets(cached_assets)
             else:
                 if not cli_args.id or cli_args.id == 'all':
                     results = mod_cache.all()

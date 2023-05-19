@@ -10,9 +10,15 @@ class Config:
         self.Version = "TabletopLibrarianVersion"
         self.Sources = []
         self.TTSBinaryPath = ""
+        self.ConfigDir = os.path.join(Path.home(),'.tabletop-librarian')
+        self.AssetCacheDir = os.path.join(self.ConfigDir,'asset-cache/')
+        if not os.path.isdir(self.ConfigDir):
+            os.mkdir(self.ConfigDir)
+        if not os.path.isdir(self.AssetCacheDir):
+            os.mkdir(self.AssetCacheDir)
 
     def get_path(self):
-        return os.path.join(Path.home(), "tabletop-librarian.cfg")
+        return os.path.join(self.ConfigDir, "tabletop-librarian.cfg")
 
     def load(self):
         if not Path(self.get_path()).is_file():
@@ -46,7 +52,7 @@ class Config:
                 pprint.pprint(pp)
                 return False
         self.Sources.append({
-            'Id': uuid.uuid4(),
+            'Id': str(uuid.uuid4()),
             'Name': name,
             'Location': location,
             'Kind': kind,
