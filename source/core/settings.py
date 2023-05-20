@@ -12,7 +12,7 @@ class Config:
         self.TTSBinaryPath = ""
         self.ConfigDir = os.path.join(Path.home(),'.tabletop-librarian')
         self.AssetCacheDir = os.path.join(self.ConfigDir,'asset-cache/')
-        self.ArchiveCreateDir = os.path.join(self.ConfigDir,'archive-create/')
+        self.ArchiveCreateDir = os.path.join(self.ConfigDir,'archive/')
         if not os.path.isdir(self.ConfigDir):
             os.mkdir(self.ConfigDir)
         if not os.path.isdir(self.AssetCacheDir):

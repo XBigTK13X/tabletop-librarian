@@ -30,12 +30,16 @@ class ModCommand:
             help="Obtain remote resources for a mod and store them locally"
         )
         self.parser.add_argument(
-            '--archive',
-            help="Copy an active mod to an archive"
+            '--backup',
+            help="Copy an active mod to an archive source"
         )
         self.parser.add_argument(
             '--source',
             help="Where the created archive should be copied"
+        )
+        self.parser.add_argument(
+            '--restore',
+            help="Restore an archived mod to an active source"
         )
 
     def handle(self, cli_args):
@@ -67,13 +71,13 @@ class ModCommand:
                             entry.parse_manifest()
                             cached_assets = asset_cache.download(entry)
                             entry.persist_assets(cached_assets)
-            elif cli_args.archive:
+            elif cli_args.backup:
                 if not cli_args.source:
-                    print("--source arg required when making archives")
+                    print("--source arg required when making backups")
                     import sys
                     sys.exit(1)
-                print(f"Archive mods matching query [{cli_args.archive}]")
-                results = mod_cache.search(cli_args.archive)
+                print(f"Backup mods matching query [{cli_args.backup}]")
+                results = mod_cache.search(cli_args.backup)
                 if len(results) == 0:
                     print(f"TODO: Archiving all mods content")
                 else:
@@ -87,7 +91,28 @@ class ModCommand:
                                 print(f"No sources found matching [{cli_args.source}]")
                             else:
                                 source_info = source.Source(source_info)
-                                tts.create_archive(source_info, entry)
+                                tts.backup_mod(source_info, entry)
+            elif cli_args.restore:
+                if not cli_args.source:
+                    print("--source arg required when restoring backups")
+                    import sys
+                    sys.exit(1)
+                print(f"Restore mods matching query [{cli_args.restore}]")
+                results = mod_cache.search(cli_args.restore)
+                if len(results) == 0:
+                    print(f"TODO: Restoring all mods content")
+                else:
+                    for entry in results:
+                        if entry.data_kind == 'archive':
+                            source_info = None
+                            for ss in config.Sources:
+                                if cli_args.source == ss['Name'] or cli_args.source == ss['Id'] or cli_args.source == ss['Location']:
+                                    source_info = ss
+                            if source_info == None:
+                                print(f"No sources found matching [{cli_args.source}]")
+                            else:
+                                source_info = source.Source(source_info)
+                                tts.restore_archive(entry, source_info)
             else:
                 if not cli_args.id or cli_args.id == 'all':
                     results = mod_cache.all()

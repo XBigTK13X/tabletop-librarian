@@ -42,7 +42,7 @@ def get_local_path(mod, remote_path, extension):
                         .replace('_','')
                     return os.path.join(mod.source.location, subdir, sanitized) + '.' + extension
 
-def create_archive(archive_source, mod):
+def backup_mod(archive_source, mod):
     archive_dir = os.path.join(config.ArchiveCreateDir, mod.name)
     if not os.path.isdir(archive_dir):
         os.mkdir(archive_dir)
@@ -67,3 +67,11 @@ def create_archive(archive_source, mod):
     shutil.copyfile(zip_path+'.ttsmod', destination_path)
     os.remove(zip_path+'.ttsmod')
     shutil.rmtree(archive_dir)
+
+def restore_archive(archive, mod_source):
+    temp_archive_path = os.path.join(config.ArchiveCreateDir, os.path.basename(archive.path))
+    extract_dir = mod_source.location.replace("Mods",'')
+    shutil.copyfile(archive.path, temp_archive_path)
+    shutil.unpack_archive(temp_archive_path, extract_dir, 'zip')
+    os.remove(temp_archive_path)
+
