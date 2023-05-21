@@ -50,7 +50,7 @@ class ModCommand:
             if len(config.Sources) > 0:
                 print(f"Sources")
                 for ss in config.Sources:
-                    print(f"  - Name: {ss['Name']}\n    Location: {ss['Location']}\n    Kind: {ss['Kind']}\n    Content: {archive_path['Content']}")
+                    print(f"  - Name: {ss['Name']}\n    Location: {ss['Location']}\n    Kind: {ss['Kind']}\n    Content: {ss['Content']}")
         else:
             mod_cache.refresh()
             if cli_args.search:
@@ -68,6 +68,7 @@ class ModCommand:
                 else:
                     for entry in results:
                         if entry.data_kind == 'mod':
+                            print(f"Downloading assets for [{entry.name}]")
                             entry.parse_manifest()
                             cached_assets = asset_cache.download(entry)
                             entry.persist_assets(cached_assets)
@@ -91,6 +92,7 @@ class ModCommand:
                                 print(f"No sources found matching [{cli_args.source}]")
                             else:
                                 source_info = source.Source(source_info)
+                                print(f"Backing up: [{entry.name}]")
                                 tts.backup_mod(source_info, entry)
             elif cli_args.restore:
                 if not cli_args.source:
@@ -112,6 +114,7 @@ class ModCommand:
                                 print(f"No sources found matching [{cli_args.source}]")
                             else:
                                 source_info = source.Source(source_info)
+                                print(f"Restoring backup: [{entry.file_name}]")
                                 tts.restore_archive(entry, source_info)
             else:
                 if not cli_args.id or cli_args.id == 'all':

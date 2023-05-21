@@ -44,9 +44,10 @@ def get_local_path(mod, remote_path, extension):
 
 def backup_mod(archive_source, mod):
     archive_dir = os.path.join(config.ArchiveCreateDir, mod.name)
-    if not os.path.isdir(archive_dir):
-        os.mkdir(archive_dir)
-        os.mkdir(os.path.join(archive_dir, 'Mods'))
+    if os.path.isdir(archive_dir):
+        shutil.rmtree(archive_dir)
+    os.mkdir(archive_dir)
+    os.mkdir(os.path.join(archive_dir, 'Mods'))
     for dir in FORMAT_LOOKUP.keys():
         os.mkdir(os.path.join(archive_dir, 'Mods', dir))
     mod.parse_manifest()

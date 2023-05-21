@@ -17,7 +17,7 @@ class Mod:
     def parse_manifest(self):
         # TODO Detect type of manifest and call target specific handler
         if '.json' in self.path:
-            with open(self.path, 'r') as manifest_data:
+            with open(self.path, 'r', encoding='UTF-8') as manifest_data:
                 self.manifest = tts_manifest.TTSManifest(self, manifest_data.read())
                 self.asset_locations = self.manifest.parse_locations()
 
