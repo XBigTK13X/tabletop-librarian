@@ -19,11 +19,12 @@ class PathCommand:
         )
         # tts -> Tabletop Simulator
         # tmb -> Tabletop Simulator Mod Backup
-        # tc -> Tabletop Club
+        # ttc -> Tabletop Club
+        # vas -> Vassal
         parser.add_argument(
             '--kind',
             help="The type of path being added",
-            choices=['tts', 'tmb', 'tc']
+            choices=['tmb', 'ttc', 'tts', 'vas']
         )
         parser.add_argument(
             '--content',
