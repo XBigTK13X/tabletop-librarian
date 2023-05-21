@@ -43,4 +43,11 @@ class ModCache:
     def all(self):
         return self.search(None)
 
+    def kind(self, needle):
+        if needle == 'mod':
+            return self.mods
+        if needle == 'archive':
+            return self.archives
+        return self.all()
+
 mod_cache = ModCache()
