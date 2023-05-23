@@ -3,28 +3,28 @@ import PyQt6.QtWidgets as qt
 from core.data.mod_cache import mod_cache
 
 class ModsTab(qt.QTableWidget):
-    def __init__(self, mod_tab, parent=None):
+    def __init__(self, parent=None):
         super(ModsTab, self).__init__()
-        self.mod_tab = mod_tab
-        headers = ['Name', 'Manifest', 'Source']
+        headers = ['Name', 'Manifest']
         self.setRowCount(0)
         self.setColumnCount(len(headers))
         self.setHorizontalHeaderLabels(headers)
         self.setEditTriggers(qt.QAbstractItemView.EditTrigger.NoEditTriggers)
         self.setSelectionBehavior(qt.QAbstractItemView.SelectionBehavior.SelectRows)
         self.setAlternatingRowColors(True)
-        self.itemSelectionChanged.connect(self.select_mod)
+        self.itemSelectionChanged.connect(self.bulk_operation)
+        self.itemDoubleClicked.connect(self.select_mod)
         for ii in range(0, self.columnCount()):
             self.horizontalHeader().setSectionResizeMode(ii,qt.QHeaderView.ResizeMode.Stretch)
         for ii, entry in enumerate(mod_cache.kind('mod')):
             self.setRowCount(ii+1)
             self.setItem(ii, 0, qt.QTableWidgetItem(entry.name))
-            self.setItem(ii, 1, qt.QTableWidgetItem(entry.file_name))
-            self.setItem(ii, 2, qt.QTableWidgetItem(entry.source.location))
+            self.setItem(ii, 1, qt.QTableWidgetItem(entry.path))
 
-    def select_mod(self, item=None):
-        # self.selectedItems()[0] = col 0, [1] = col 1, etc
-        print(item)
-        print("wh")
-        print(self.selectedItems()[1].text())
-        self.mod_tab.select_mod(item)
+    def select_mod(self):
+        self.window().select_mod(self.selectedItems()[1].text())
+
+    #TODO Handle multiple mods at once
+    def bulk_operation(self):
+        if len(self.selectedItems()) > self.columnCount():
+            pass

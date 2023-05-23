@@ -10,7 +10,7 @@ class ModCache:
     def __init__(self):
         self.archives = []
         self.mods = []
-        self.current_mod = None
+        self.selected_mod = None
 
     def refresh(self):
         if config.Sources:
@@ -51,7 +51,12 @@ class ModCache:
             return self.archives
         return self.all()
 
-    def get_mod(self, mod_index):
-        return self.mods[0]
+    def select_mod(self, mod_path):
+        for mm in self.mods:
+            if mm.path == mod_path:
+                self.selected_mod = mm
+
+    def get_selected_mod(self):
+        return self.selected_mod
 
 mod_cache = ModCache()

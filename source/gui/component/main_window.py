@@ -21,15 +21,21 @@ class MainWindow(qt.QMainWindow):
 
         central_widget = qt.QWidget(self)
         root_layout = qt.QVBoxLayout(central_widget)
-        tabs = qt.QTabWidget()
-        mod_tab = ModTab()
-        tabs.addTab(ModsTab(mod_tab), "Mods")
-        tabs.addTab(mod_tab, "Selected Mod")
-        tabs.addTab(ArchivesTab(), "Archives")
-        tabs.addTab(PathsTab(), "Paths")
-        root_layout.addWidget(tabs)
+        self.tabs = qt.QTabWidget()
+        self.mod_tab = ModTab(parent=self)
+        self.tabs.addTab(ModsTab(parent=self), "Mods")
+        self.tabs.addTab(self.mod_tab, "Selected Mod")
+        self.selected_mod_tab_index = self.tabs.count() - 1
+        self.tabs.addTab(ArchivesTab(parent=self), "Archives")
+        self.tabs.addTab(PathsTab(parent=self), "Paths")
+        root_layout.addWidget(self.tabs)
         self.setCentralWidget(central_widget)
         self.resize(800,600)
 
     def about(self):
         AboutDialog().widget.exec()
+
+    def select_mod(self, mod_path):
+        mod_cache.select_mod(mod_path)
+        self.mod_tab.refresh()
+        self.tabs.setCurrentIndex(self.selected_mod_tab_index)

@@ -16,6 +16,17 @@ class AssetCache:
         self.downloads = {}
         self.hasher = hashlib.new('sha1')
 
+    def scan(self, mod):
+        assets = []
+        print(f'Locations {len(mod.asset_locations)}')
+        for location in mod.asset_locations:
+            assets.append({
+                'remote_location': location,
+                'local_file': tts.get_local_glob(mod, location)
+            })
+            print(location)
+        return assets
+
     def download(self, mod):
         downloads = {}
         for location in mod.asset_locations:
