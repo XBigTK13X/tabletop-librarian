@@ -10,6 +10,7 @@ class ModCache:
     def __init__(self):
         self.archives = []
         self.mods = []
+        self.current_mod = None
 
     def refresh(self):
         if config.Sources:
@@ -49,5 +50,8 @@ class ModCache:
         if needle == 'archive':
             return self.archives
         return self.all()
+
+    def get_mod(self, mod_index):
+        return self.mods[0]
 
 mod_cache = ModCache()
