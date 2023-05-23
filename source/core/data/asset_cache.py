@@ -37,6 +37,7 @@ class AssetCache:
     def download(self, mod):
         downloads = {}
         for location in mod.asset_locations:
+            # TODO Use the sparse asset lookup to skip glob file scans
             if tts.get_local_glob(mod, location):
                 continue
             self.hasher.update(location.encode())

@@ -28,6 +28,8 @@ class Refresh:
                         for root, dirs, files, in os.walk(parent.location):
                             for ff in files:
                                 file_path = os.path.join(root, ff)
+                                if 'Models Raw' in file_path or 'Images Raw' in file_path:
+                                    continue
                                 if 'WorkshopFileInfos.json' == ff:
                                     with open(file_path, 'r') as json_file:
                                         mod_list = json.load(json_file)
