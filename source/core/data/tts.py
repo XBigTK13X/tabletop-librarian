@@ -14,7 +14,8 @@ FORMAT_LOOKUP = {
 }
 
 def sanitize(file_path):
-     return file_path.replace(':','') \
+     name_only = os.path.splitext(file_path)[0]
+     return name_only.replace(':','') \
         .replace('/','') \
         .replace('\\','') \
         .replace('-','') \
@@ -33,14 +34,7 @@ def get_local_path(mod, remote_path, extension):
         for subdir, formats in FORMAT_LOOKUP.items():
             for format in formats:
                 if format == extension_search:
-                    sanitized = remote_path \
-                        .replace(':','') \
-                        .replace('/','') \
-                        .replace('\\','') \
-                        .replace('-','') \
-                        .replace('.','') \
-                        .replace('_','')
-                    return os.path.join(mod.source.location, subdir, sanitized) + '.' + extension
+                    return os.path.join(mod.source.location, subdir, sanitize(remote_path)) + '.' + extension
 
 def backup_mod(archive_source, mod):
     archive_dir = os.path.join(config.ArchiveCreateDir, mod.name)

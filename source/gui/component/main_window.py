@@ -5,6 +5,8 @@ from gui.component.paths_tab import PathsTab
 from gui.component.about_dialog import AboutDialog
 
 from core.data.mod_cache import mod_cache
+from core.data.asset_cache import asset_cache
+from core.data.refresh import refresher
 
 import PyQt6.QtWidgets as qt
 
@@ -17,7 +19,7 @@ class MainWindow(qt.QMainWindow):
         about_action = help_menu.addAction("&About")
         about_action.triggered.connect(self.about)
 
-        mod_cache.refresh()
+        refresher.scan_all()
 
         central_widget = qt.QWidget(self)
         root_layout = qt.QVBoxLayout(central_widget)

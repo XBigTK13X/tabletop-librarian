@@ -5,7 +5,6 @@ from core.data.mod_cache import mod_cache
 class ArchivesTab(qt.QTableWidget):
     def __init__(self, parent=None):
         super(ArchivesTab, self).__init__()
-        mod_cache.refresh()
         headers = ['Name', 'Source']
         self.setRowCount(0)
         self.setColumnCount(len(headers))

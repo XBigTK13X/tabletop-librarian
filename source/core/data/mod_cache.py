@@ -1,7 +1,4 @@
 from core.settings import config
-from core.model import mod
-from core.model import archive
-from core.model import source
 
 import os
 import json
@@ -12,23 +9,11 @@ class ModCache:
         self.mods = []
         self.selected_mod = None
 
-    def refresh(self):
-        if config.Sources:
-            for ss in config.Sources:
-                parent = source.Source(ss)
-                if parent.content == 'archive':
-                    for root, dirs, files in os.walk(parent.location):
-                        for ff in files:
-                            self.archives.append(archive.Archive(parent, os.path.join(root, ff)))
-                if parent.content == 'mod':
-                    if parent.kind == 'tts':
-                        for root, dirs, files, in os.walk(os.path.join(parent.location, "Workshop")):
-                            for ff in files:
-                                if 'WorkshopFileInfos.json' == ff:
-                                    with open(os.path.join(root, ff), 'r') as json_file:
-                                        mod_list = json.load(json_file)
-                                        for item in mod_list:
-                                            self.mods.append(mod.Mod(parent, item["Name"],item["Directory"]))
+    def track_archive(self, archive):
+        self.archives.append(archive)
+
+    def track_mod(self, mod):
+        self.mods.append(mod)
 
     def search(self, needle):
         needle = None if needle == None else needle.lower()

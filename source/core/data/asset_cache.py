@@ -15,16 +15,23 @@ class AssetCache:
     def __init__(self):
         self.downloads = {}
         self.hasher = hashlib.new('sha1')
+        self.sparse_lookup = {}
 
-    def scan(self, mod):
+    def track_sparse_entry(self, local_key, local_path):
+        self.sparse_lookup[local_key] = local_path
+
+    def get_sparse_entry(self, local_key):
+        if local_key in self.sparse_lookup:
+            return self.sparse_lookup[local_key]
+        return None
+
+    def scan(self, mod, local_handler):
         assets = []
-        print(f'Locations {len(mod.asset_locations)}')
         for location in mod.asset_locations:
             assets.append({
                 'remote_location': location,
-                'local_file': tts.get_local_glob(mod, location)
+                'local_file': self.get_sparse_entry(local_handler(location))
             })
-            print(location)
         return assets
 
     def download(self, mod):
