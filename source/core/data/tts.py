@@ -1,5 +1,7 @@
 from core.settings import config
 
+from core.util import tl_file
+
 import os
 import glob
 import shutil
@@ -34,18 +36,18 @@ def get_local_path(mod, remote_path, extension):
         for subdir, formats in FORMAT_LOOKUP.items():
             for format in formats:
                 if format == extension_search:
-                    return os.path.join(mod.source.location, subdir, sanitize(remote_path)) + '.' + extension
+                    return tl_file.path(mod.source.location, subdir, sanitize(remote_path)) + '.' + extension
 
 def backup_mod(archive_source, mod):
-    archive_dir = os.path.join(config.ArchiveCreateDir, mod.name)
+    archive_dir = tl_file.path(config.ArchiveCreateDir, mod.name)
     if os.path.isdir(archive_dir):
         shutil.rmtree(archive_dir)
     os.mkdir(archive_dir)
-    os.mkdir(os.path.join(archive_dir, 'Mods'))
+    os.mkdir(tl_file.path(archive_dir, 'Mods'))
     for dir in FORMAT_LOOKUP.keys():
-        os.mkdir(os.path.join(archive_dir, 'Mods', dir))
+        os.mkdir(tl_file.path(archive_dir, 'Mods', dir))
     mod.parse_manifest()
-    shutil.copy(mod.path, os.path.join(archive_dir, 'Mods', 'Workshop', mod.file_name))
+    shutil.copy(mod.path, tl_file.path(archive_dir, 'Mods', 'Workshop', mod.file_name))
     asset_count = 0
     for location in mod.asset_locations:
          local_asset = get_local_glob(mod, location)
@@ -58,13 +60,13 @@ def backup_mod(archive_source, mod):
     os.rename(zip_path+'.zip', zip_path+'.ttsmod')
     # TODO If number, then use special subdir
     missing =  f' ({asset_count}_{len(mod.asset_locations)})' if asset_count < len(mod.asset_locations) else ''
-    destination_path = os.path.join(archive_source.location, mod.name[0].lower(), mod.name + f'{missing}.ttsmod')
+    destination_path = tl_file.path(archive_source.location, mod.name[0].lower(), mod.name + f'{missing}.ttsmod')
     shutil.copyfile(zip_path+'.ttsmod', destination_path)
     os.remove(zip_path+'.ttsmod')
     shutil.rmtree(archive_dir)
 
 def restore_archive(archive, mod_source):
-    temp_archive_path = os.path.join(config.ArchiveCreateDir, os.path.basename(archive.path))
+    temp_archive_path = tl_file.path(config.ArchiveCreateDir, os.path.basename(archive.path))
     extract_dir = mod_source.location.replace("Mods",'')
     shutil.copyfile(archive.path, temp_archive_path)
     shutil.unpack_archive(temp_archive_path, extract_dir, 'zip')

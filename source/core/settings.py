@@ -1,3 +1,5 @@
+from core.util import tl_file
+
 from pathlib import Path
 import os
 import json
@@ -10,9 +12,9 @@ class Config:
         self.Version = "TabletopLibrarianVersion"
         self.Sources = []
         self.TTSBinaryPath = ""
-        self.ConfigDir = os.path.join(Path.home(),'.tabletop-librarian')
-        self.AssetCacheDir = os.path.join(self.ConfigDir,'asset-cache/')
-        self.ArchiveCreateDir = os.path.join(self.ConfigDir,'archive/')
+        self.ConfigDir = tl_file.path(Path.home(),'.tabletop-librarian')
+        self.AssetCacheDir = tl_file.path(self.ConfigDir,'asset-cache/')
+        self.ArchiveCreateDir = tl_file.path(self.ConfigDir,'archive/')
         if not os.path.isdir(self.ConfigDir):
             os.mkdir(self.ConfigDir)
         if not os.path.isdir(self.AssetCacheDir):
@@ -21,7 +23,7 @@ class Config:
             os.mkdir(self.ArchiveCreateDir)
 
     def get_path(self):
-        return os.path.join(self.ConfigDir, "tabletop-librarian.cfg")
+        return tl_file.path(self.ConfigDir, "tabletop-librarian.cfg")
 
     def load(self):
         if not Path(self.get_path()).is_file():

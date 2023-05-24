@@ -1,12 +1,14 @@
-import os, json
-
+from core.util import tl_file
 from core.model import tts_manifest
+
+import os
 
 class Mod:
     def __init__(self, source, name, manifest_path):
         self.source = source
         self.name = name
-        self.path =  manifest_path
+        import os
+        self.path = tl_file.path(manifest_path)
         self.file_name = os.path.basename(self.path)
         self.data_kind = 'mod'
         self.assets = []

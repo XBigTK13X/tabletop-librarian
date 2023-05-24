@@ -1,4 +1,5 @@
 from core.settings import config
+from core.util import tl_file
 from core.model import mod
 from core.model import archive
 from core.model import source
@@ -22,19 +23,19 @@ class Refresh:
                 if parent.content == 'archive':
                     for root, dirs, files in os.walk(parent.location):
                         for ff in files:
-                            self.mod_cache.track_archive(archive.Archive(parent, os.path.join(root, ff)))
+                            self.mod_cache.track_archive(archive.Archive(parent, tl_file.path(root, ff)))
                 if parent.content == 'mod':
                     if parent.kind == 'tts':
                         for root, dirs, files, in os.walk(parent.location):
                             for ff in files:
-                                file_path = os.path.join(root, ff)
+                                file_path = tl_file.path(root, ff)
                                 if 'Models Raw' in file_path or 'Images Raw' in file_path:
                                     continue
                                 if 'WorkshopFileInfos.json' == ff:
                                     with open(file_path, 'r') as json_file:
                                         mod_list = json.load(json_file)
                                         for item in mod_list:
-                                            self.mod_cache.track_mod(mod.Mod(parent, item["Name"],item["Directory"]))
+                                            self.mod_cache.track_mod(mod.Mod(parent, item["Name"], item["Directory"]))
                                 else:
                                     sanitized = tts.sanitize(ff)
                                     self.asset_cache.track_sparse_entry(sanitized, file_path)

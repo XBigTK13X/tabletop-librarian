@@ -1,3 +1,4 @@
+from core.util import tl_file
 from core.settings import config
 from core.data import tts
 
@@ -104,6 +105,6 @@ class AssetCache:
         return downloads
 
     def temp_path(self, local_id):
-        return os.path.join(config.AssetCacheDir, local_id)
+        return tl_file.path(config.AssetCacheDir, local_id)
 
 asset_cache = AssetCache()
