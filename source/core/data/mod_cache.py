@@ -1,8 +1,3 @@
-from core.settings import config
-
-import os
-import json
-
 class ModCache:
     def __init__(self):
         self.archives = []

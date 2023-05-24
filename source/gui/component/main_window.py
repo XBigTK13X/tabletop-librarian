@@ -23,13 +23,24 @@ class MainWindow(qt.QMainWindow):
 
         central_widget = qt.QWidget(self)
         root_layout = qt.QVBoxLayout(central_widget)
+        filter_layout = qt.QHBoxLayout()
+        self.filter_input = qt.QLineEdit()
+        self.filter_input.returnPressed.connect(self.filter_lists)
+        self.filter_button = qt.QPushButton("Filter")
+        self.filter_button.clicked.connect(self.filter_lists)
         self.tabs = qt.QTabWidget()
+        self.mods_tab = ModsTab(parent=self)
         self.mod_tab = ModTab(parent=self)
-        self.tabs.addTab(ModsTab(parent=self), "Mods")
+        self.archives_tab = ArchivesTab(parent=self)
+        self.tabs.addTab(self.mods_tab, "Mods")
         self.tabs.addTab(self.mod_tab, "Selected Mod")
         self.selected_mod_tab_index = self.tabs.count() - 1
-        self.tabs.addTab(ArchivesTab(parent=self), "Archives")
+        self.tabs.addTab(self.archives_tab, "Archives")
         self.tabs.addTab(PathsTab(parent=self), "Paths")
+
+        filter_layout.addWidget(self.filter_input)
+        filter_layout.addWidget(self.filter_button)
+        root_layout.addLayout(filter_layout)
         root_layout.addWidget(self.tabs)
         self.setCentralWidget(central_widget)
         self.resize(800,600)
@@ -41,3 +52,8 @@ class MainWindow(qt.QMainWindow):
         mod_cache.select_mod(mod_path)
         self.mod_tab.refresh()
         self.tabs.setCurrentIndex(self.selected_mod_tab_index)
+
+    def filter_lists(self):
+        filter_text = self.filter_input.text()
+        self.mods_tab.update_filter(filter_text)
+        self.archives_tab.update_filter(filter_text)

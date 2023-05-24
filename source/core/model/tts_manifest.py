@@ -15,7 +15,7 @@ class TTSManifest:
         self.mod = mod
 
     def parse_locations(self):
-        return [location for location in re.findall(REMOTE_REGEX, self.manifest_text) if not 'api.tabletopsimulator.com/ui/introUI/' in location]
+        return [location for location in re.findall(REMOTE_REGEX, self.manifest_text) if not 'api.tabletopsimulator.com' in location]
 
     def write_assets(self, assets):
         for k,v in assets.items():

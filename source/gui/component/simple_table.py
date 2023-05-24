@@ -3,7 +3,7 @@ import PyQt6.QtCore as core
 
 from core.data.mod_cache import mod_cache
 
-class ModsTableModel(core.QAbstractTableModel):
+class SimpleTableModel(core.QAbstractTableModel):
     def __init__(self, data):
         super().__init__()
         self._data = data
@@ -31,9 +31,9 @@ class ModsTableModel(core.QAbstractTableModel):
 
 # https://raw.githubusercontent.com/PyQt5/Examples/master/PyQt5/itemviews/customsortfiltermodel.py
 class ModsTab(qt.QTableView):
-    def __init__(self, parent=None):
+    def __init__(self, headers, parent=None):
         super(ModsTab, self).__init__()
-        model = ModsTableModel(mod_cache.kind('mod'))
+        model = SimpleTableModel(mod_cache.kind('mod'))
         self.proxyModel = core.QSortFilterProxyModel()
         self.proxyModel.setDynamicSortFilter(True)
         self.proxyModel.setSourceModel(model)

@@ -23,3 +23,10 @@ class Mod:
 
     def persist_assets(self, assets):
         self.manifest.write_assets(assets)
+
+    def get_data_index(self, index):
+        if index == 0:
+            return self.name
+        if index == 1:
+            return self.path
+        return None

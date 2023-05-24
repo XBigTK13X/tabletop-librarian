@@ -18,3 +18,6 @@ class ArchivesTab(qt.QTableWidget):
             self.setRowCount(ii+1)
             self.setItem(ii, 0, qt.QTableWidgetItem(entry.file_name))
             self.setItem(ii, 1, qt.QTableWidgetItem(entry.source.location))
+
+    def update_filter(self, filter_text):
+        pass

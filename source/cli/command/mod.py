@@ -52,7 +52,6 @@ class ModCommand:
                 for ss in config.Sources:
                     print(f"  - Name: {ss['Name']}\n    Location: {ss['Location']}\n    Kind: {ss['Kind']}\n    Content: {ss['Content']}")
         else:
-            mod_cache.refresh()
             if cli_args.search:
                 results = mod_cache.search(cli_args.search)
                 if len(results) == 0:
