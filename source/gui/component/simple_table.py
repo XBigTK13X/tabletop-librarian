@@ -40,6 +40,7 @@ class SimpleTable(qt.QTableView):
         self.horizontalHeader().setSectionResizeMode(qt.QHeaderView.ResizeMode.Stretch)
         self.setEditTriggers(qt.QAbstractItemView.EditTrigger.NoEditTriggers)
         self.setSortingEnabled(True)
+        self.proxyModel.sort(0, core.Qt.SortOrder.AscendingOrder)
         self.setSelectionBehavior(qt.QAbstractItemView.SelectionBehavior.SelectRows)
         self.setAlternatingRowColors(True)
 

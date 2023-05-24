@@ -12,8 +12,10 @@ class ModsTab(simple_table.SimpleTable):
         )
         self.doubleClicked.connect(self.select_mod)
 
-    def select_mod(self, qt_index):
-        self.window().select_mod(self.proxyModel.sourceModel().get_path(qt_index))
+    def select_mod(self, proxy_index):
+        source_index = self.proxyModel.mapToSource(proxy_index)
+        source_model = self.proxyModel.sourceModel()
+        self.window().select_mod(source_model.get_path(source_index))
 
     def get_model_data(self, model, data_index):
         if data_index == 0:
