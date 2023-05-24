@@ -1,20 +1,18 @@
 import PyQt6.QtWidgets as qt
 import PyQt6.QtCore as core
 
-from core.data.mod_cache import mod_cache
+# https://raw.githubusercontent.com/PyQt5/Examples/master/PyQt5/itemviews/customsortfiltermodel.py
 
 class SimpleTableModel(core.QAbstractTableModel):
-    def __init__(self, data):
+    def __init__(self, headers, data, cell_handler):
         super().__init__()
         self._data = data
-        self.headers = [
-            'Name',
-            'Path'
-        ]
+        self.headers = headers
+        self.cell_handler = cell_handler
 
     def data(self, index, role):
         if role == core.Qt.ItemDataRole.DisplayRole:
-            return self._data[index.row()].get_data_index(index.column())
+            return self.cell_handler(self._data[index.row()], index.column())
 
     def get_path(self, index):
         return self._data[index.row()].path
@@ -29,11 +27,12 @@ class SimpleTableModel(core.QAbstractTableModel):
         if orientation == core.Qt.Orientation.Horizontal and role == core.Qt.ItemDataRole.DisplayRole:
             return self.headers[section]
 
-# https://raw.githubusercontent.com/PyQt5/Examples/master/PyQt5/itemviews/customsortfiltermodel.py
-class ModsTab(qt.QTableView):
-    def __init__(self, headers, parent=None):
-        super(ModsTab, self).__init__()
-        model = SimpleTableModel(mod_cache.kind('mod'))
+class SimpleTable(qt.QTableView):
+    def __init__(self, parent=None):
+        super(SimpleTable, self).__init__()
+
+    def setup(self, headers, data, cell_handler):
+        model = SimpleTableModel(headers, data, cell_handler)
         self.proxyModel = core.QSortFilterProxyModel()
         self.proxyModel.setDynamicSortFilter(True)
         self.proxyModel.setSourceModel(model)
@@ -43,15 +42,6 @@ class ModsTab(qt.QTableView):
         self.setSortingEnabled(True)
         self.setSelectionBehavior(qt.QAbstractItemView.SelectionBehavior.SelectRows)
         self.setAlternatingRowColors(True)
-        self.selectionModel().selectionChanged.connect(self.bulk_operation)
-        self.doubleClicked.connect(self.select_mod)
-
-    def select_mod(self, qt_index):
-        self.window().select_mod(self.model().get_path(qt_index))
-
-    #TODO Handle multiple mods at once
-    def bulk_operation(self):
-        pass
 
     def update_filter(self, filter_text):
         self.proxyModel.setFilterFixedString(filter_text)
