@@ -12,9 +12,10 @@ class Mod:
         self.file_name = os.path.basename(self.path)
         self.data_kind = 'mod'
         self.assets = []
+        self.haystack = self.path.lower() + '-' + self.name.lower()
 
     def search(self, needle):
-        return needle in self.path.lower() or needle in self.name.lower()
+        return needle in self.haystack
 
     def parse_manifest(self):
         # TODO Detect type of manifest and call target specific handler
@@ -22,6 +23,3 @@ class Mod:
             with open(self.path, 'r', encoding='UTF-8') as manifest_data:
                 self.manifest = tts_manifest.TTSManifest(self, manifest_data.read())
                 self.asset_locations = self.manifest.parse_locations()
-
-    def persist_assets(self, assets):
-        self.manifest.write_assets(assets)

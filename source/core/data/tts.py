@@ -22,7 +22,8 @@ def sanitize(file_path):
         .replace('\\','') \
         .replace('-','') \
         .replace('.','') \
-        .replace('_','')
+        .replace('_','') \
+        .replace('?','')
 
 def get_local_glob(mod, remote_path):
     local_glob = f'{mod.source.location}/**/{sanitize(remote_path)}*'
@@ -50,6 +51,7 @@ def backup_mod(archive_source, mod):
     shutil.copy(mod.path, tl_file.path(archive_dir, 'Mods', 'Workshop', mod.file_name))
     asset_count = 0
     for location in mod.asset_locations:
+         # TODO Use sparse lookup instead of glob
          local_asset = get_local_glob(mod, location)
          if local_asset:
             asset_count += 1
@@ -66,6 +68,7 @@ def backup_mod(archive_source, mod):
     shutil.rmtree(archive_dir)
 
 def restore_archive(archive, mod_source):
+    # TODO - This for some reason unpacks in the archive location top directory?
     temp_archive_path = tl_file.path(config.ArchiveCreateDir, os.path.basename(archive.path))
     extract_dir = mod_source.location.replace("Mods",'')
     shutil.copyfile(archive.path, temp_archive_path)

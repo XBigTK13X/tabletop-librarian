@@ -68,7 +68,6 @@ class ModCommand:
                     for entry in results:
                         if entry.data_kind == 'mod':
                             print(f"Downloading assets for [{entry.name}]")
-                            entry.parse_manifest()
                             cached_assets = asset_cache.download(entry)
                             entry.persist_assets(cached_assets)
             elif cli_args.backup:

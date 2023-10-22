@@ -12,7 +12,10 @@ class Config:
         self.Version = "TabletopLibrarianVersion"
         self.Sources = []
         self.TTSBinaryPath = ""
-        self.ConfigDir = tl_file.path(Path.home(),'.tabletop-librarian')
+        if os.path.isdir('E:/data/.tabletop-librarian'):
+            self.ConfigDir = 'E:/data/.tabletop-librarian'
+        else:
+            self.ConfigDir = tl_file.path(Path.home(),'.tabletop-librarian')
         self.AssetCacheDir = tl_file.path(self.ConfigDir,'asset-cache/')
         self.ArchiveCreateDir = tl_file.path(self.ConfigDir,'archive/')
         if not os.path.isdir(self.ConfigDir):
